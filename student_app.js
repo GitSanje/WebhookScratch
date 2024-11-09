@@ -5,6 +5,7 @@ const mongoose = require("mongoose")
 const connectDB = require("./DB/conn")
 const app = express()
 const PORT = process.env.PORT || 3100;
+const axios = require('axios');
 
 const {schoolModel } = require('./models/schoolModel')
 const {studentModel } = require('./models/studentModel')
@@ -63,7 +64,44 @@ app.post('/addWebhookEvent', async(req, res) => {
 })
 
 
+app.post('/addStudent', async (req, res) => {
+    let data = req.body;
+    let studentData ={};
+    let schoolDetails = await  schoolModel.findOne({"schoolId": data.schoolId});
 
+    if(schoolDetails){
+        const studentDetails = new studentModel({
+            name: data.name,
+            age:data.age,
+            schoolId: data.schoolId,
+
+        });
+        studentData = await studentDetails.save();
+        let webhookUrl ="";
+        for(let i=0; i<schoolDetails.webhookDetails.length; i++){
+            if(schoolDetails.webhookDetails[i].eventName === "studen.add")
+            webhookUrl = schoolDetails.webhookDetails[i].endpointUrl;
+        }
+
+        if(webhookUrl != null && webhookUrl.length>0){
+            // webhook response
+            let result = await axios.post(webhookUrl, studentData,{
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            console.log(" webhook data send")
+        }
+
+    }else
+    {
+        console.log(" NO school")
+    }
+    res.send({
+        result:"added succesfully: "+studentData.name
+    });
+
+})
 mongoose.connection.once('open', () => {
     console.log('connected to MongoDB')
     app.listen(PORT, () => console.log(`server running at http://localhost:${PORT}`))

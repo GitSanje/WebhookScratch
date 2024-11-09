@@ -1,0 +1,35 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..1dcef2d
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,2 @@
++node_modules
++.env
+\ No newline at end of file
+diff --git a/package-lock.json b/package-lock.json
+index e195c78..bd655c7 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,3 +1,5 @@
++
++
+ {
+   "name": "webhookfromscratch",
+   "version": "1.0.0",
+diff --git a/{ b/{
+new file mode 100644
+index 0000000..5b8f493
+--- /dev/null
++++ b/{
+@@ -0,0 +1,10 @@
++feat: Initial setup for MongoDB database and server
++
++This commit sets up the initial structure for a MongoDB database connection and a basic server. It includes:
++
++- Creation of an `.env` file for storing environment variables.
++- Implementation of a `conn.js` file to handle the database connection.
++- Definition of `schoolModel.js` and `studentModel.js` to define the database schemas for schools and students.
++- Creation of the `ronaldo_school_app.js` server, which handles basic routing and a webhook endpoint.
++- Development of the `student_app.js` server to handle student-related operations.
++
